@@ -1,12 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: dvdrentalpos
+  name: dvdrentalpos-frontend
   labels:
     app: dvdrentalpos
 spec:
   ports:
-  - port: 8888
+  - port: 8010
+    targetPort: frontend
   selector:
     app: dvdrentalpos
     tier: frontend
@@ -15,7 +16,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dvdrentalpos
+  name: dvdrentalpos-frontend
   labels:
     app: dvdrentalpos
 spec:
@@ -32,9 +33,12 @@ spec:
         tier: frontend
     spec:
       containers:
-      - image: ghcr.io/lilopkins/dvdrentalpos-frontend:latest
-        name: dvdrentalpos-frontend
+      - image: ghcr.io/lilopkins/dvdrentalpos-frontend:b9671e1cc8c71e3bfb8b050fd6c2d9cd0563dffd
+        name: frontend
         ports:
         - containerPort: 8888
-          name: dvdrentalpos-fe
-
+          name: frontend
+        resources:
+          limits:
+            cpu: 250m
+            memory: 256Mi
