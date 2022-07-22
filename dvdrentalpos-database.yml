@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dvdrentalpos-mysql
+  labels:
+    app: dvdrentalpos
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: dvdrentalpos
+    tier: mysql
+  clusterIP: None
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dvdrentalpos-mysql-pv-claim
+  labels:
+    app: dvdrentalpos
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dvdrentalpos-mysql
+  labels:
+    app: dvdrentalpos
+spec:
+  selector:
+    matchLabels:
+      app: dvdrentalpos
+      tier: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dvdrentalpos
+        tier: mysql
+    spec:
+      containers:
+      - image: docker.io/mariadb:latest
+        name: mysql
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dvdrentalpos-mysql-pass
+              key: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: dvdrentalpos-mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: dvdrentalpos-mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: dvdrentalpos-mysql-pv-claim

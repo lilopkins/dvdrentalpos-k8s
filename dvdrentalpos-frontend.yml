@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dvdrentalpos
+  labels:
+    app: dvdrentalpos
+spec:
+  ports:
+  - port: 8888
+  selector:
+    app: dvdrentalpos
+    tier: frontend
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dvdrentalpos
+  labels:
+    app: dvdrentalpos
+spec:
+  selector:
+    matchLabels:
+      app: dvdrentalpos
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dvdrentalpos
+        tier: frontend
+    spec:
+      containers:
+      - image: ghcr.io/lilopkins/dvdrentalpos-frontend:latest
+        name: dvdrentalpos-frontend
+        ports:
+        - containerPort: 8888
+          name: dvdrentalpos-fe
+
