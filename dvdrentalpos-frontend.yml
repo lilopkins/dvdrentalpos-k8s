@@ -36,7 +36,7 @@ spec:
       - image: ghcr.io/lilopkins/dvdrentalpos-frontend:b9671e1cc8c71e3bfb8b050fd6c2d9cd0563dffd
         name: frontend
         ports:
-        - containerPort: 8888
+        - containerPort: 80
           name: frontend
         resources:
           limits:

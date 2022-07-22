@@ -45,7 +45,7 @@ spec:
         tier: mysql
     spec:
       containers:
-      - image: docker.io/mariadb:latest
+      - image: docker.io/linuxserver/mariadb:10.5.16
         name: mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
@@ -57,9 +57,9 @@ spec:
         - containerPort: 3306
           name: mysql
         volumeMounts:
-        - name: dvdrentalpos-mysql-persistent-storage
+        - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
       volumes:
-      - name: dvdrentalpos-mysql-persistent-storage
+      - name: mysql-persistent-storage
         persistentVolumeClaim:
           claimName: dvdrentalpos-mysql-pv-claim
