@@ -11,7 +11,23 @@ spec:
   selector:
     app: dvdrentalpos
     tier: frontend
-  type: LoadBalancer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dvdrentalpos-ingress
+spec:
+  rules:
+  - host: dvdrentalpos.home.hpkns.uk
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: dvdrentalpos-frontend
+            port:
+              number: 8010
 ---
 apiVersion: apps/v1
 kind: Deployment
